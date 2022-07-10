@@ -1,0 +1,43 @@
+.profile-side {
+    border: 1px solid #000000;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    background-color: #191414;
+}
+
+.top-left {
+    display: inline-block;
+    margin-top: auto;
+    margin-bottom: auto;
+}
+
+.top-left p {
+    margin: 5px;
+    padding: 0;
+    color: #ebebeb;
+}
+
+.top-right {
+    display: flex;
+    margin: auto 1% auto auto;
+}
+
+.top-right__text {
+    margin: auto 1% auto auto;
+}
+
+.profile-pic {
+    margin: auto 1% auto auto;
+}
+
+.top-right p {
+    margin: 3px;
+    text-align: right;
+    color: #ebebeb;
+}
+
+.spotify-logo {
+    max-height: 5vh;
+    margin: 2.5vh;
+}
