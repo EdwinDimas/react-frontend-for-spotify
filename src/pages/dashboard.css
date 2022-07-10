@@ -1,0 +1,17 @@
+.dashboard-profile {
+    width: 100vw;
+    height: 10vh;
+}
+
+.dashboard-body {
+    height: 75vh;
+    overflow-y: auto;
+}
+
+.dashboard-player {
+    position: sticky;
+    bottom: 0;
+    width: 100vw;
+    height: 15vh;
+    background-color: rgb(0, 0, 0);
+}

@@ -1,0 +1,16 @@
+.scrollable {
+    max-height: 75vh;
+
+    overflow-y: scroll;
+    overflow-x: hidden;
+}
+
+.LikedSongs-header {
+    display: flex;
+    height: 10vh;
+    margin: 3vh;
+}
+
+.separator {
+    flex: 1;
+}
