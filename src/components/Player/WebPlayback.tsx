@@ -4,9 +4,9 @@ import DeviceInfo from "../../reducers/DeviceInfo";
 import { FaPlay, FaPause } from "react-icons/fa";
 import { GiPreviousButton, GiNextButton } from "react-icons/gi";
 import './WebPlayback.css'
-import { setNextSong, setPreviousSong } from "../../reducers/LikedSongs";
 import { usePlayResumeMutation } from "../../services/UsersAndSongs";
 import { useSelector } from "react-redux";
+import { setPreviousSong } from "../../reducers/LikedSongs";
 
 const WebPlayBack = (props: any) => {
 
@@ -20,20 +20,27 @@ const WebPlayBack = (props: any) => {
 	const [is_paused, setPaused] = useState(false);
 	const [is_active, setActive] = useState(false);
 	const [current_track, setTrack] = useState(track);
+	const uris = useSelector((state: any) => state.LikedSongs.uris);
+	const previousSong = useSelector((state: any) => state.LikedSongs.previousSong);
+	const deviceId = useSelector( (state: any) => state.DeviceInfo.deviceId);
+
+	const filterSelectedUris = (offset:string) => {
+        const offsetId = uris.indexOf(offset); 
+        return (
+            uris.reduce( (acumulator:string[], current:string, currentIndex:number) => {
+                if(offsetId <= currentIndex){
+                   acumulator.push(current) 
+                }
+                return acumulator;
+            }, [] )
+        )
+    }
 
 	const [playResume] = usePlayResumeMutation({})
-	const currentSong = useSelector((state: any) => state.LikedSongs.currentSong);
-	const device_id = useSelector((state: any) => state.DeviceInfo.device_id);
-	console.log({ device_id, currentSong })
-
-	const playNextSong = () => {
-		store.dispatch(setNextSong());
-		playResume({ uris: [currentSong] })
-	}
 
 	const playPrevSong = () => {
 		store.dispatch(setPreviousSong());
-		playResume({ uris: [currentSong] })
+		playResume({ uris: filterSelectedUris(previousSong), deviceId:deviceId });
 	}
 
 	useEffect(() => {
@@ -60,6 +67,7 @@ const WebPlayBack = (props: any) => {
 
 			player.addListener('not_ready', ({ device_id }: any) => {
 				console.log('Device ID has gone offline', device_id);
+				player.disconnect();
 			});
 
 			player.addListener('player_state_changed', ((state: any) => {
@@ -68,9 +76,8 @@ const WebPlayBack = (props: any) => {
 					return;
 				}
 
-				if (state.duration === state.position) {
-					store.dispatch(setNextSong())
-					playResume({ uris: [currentSong], device_id: device_id })
+				if(state.track_window.next_tracks.length === 0){
+					console.log("ARREGLO TERMINADO");
 				}
 
 				setTrack(state.track_window.current_track);
@@ -86,6 +93,11 @@ const WebPlayBack = (props: any) => {
 			player.connect();
 
 		};
+
+		return (
+			player?.disconnect()
+		)
+
 	}, []);
 
 	return (
@@ -99,12 +111,12 @@ const WebPlayBack = (props: any) => {
 						<div className="now-playing__side">
 							<div className="now-playing__name ">
 								<span>
-									{current_track.name}
+									{current_track?.name}
 								</span>
 							</div>
 
 							<div className="now-playing__artist">{
-								current_track.artists[0].name
+								current_track?.artists[0].name
 							}</div>
 						</div>
 					</div>
@@ -116,18 +128,15 @@ const WebPlayBack = (props: any) => {
 							<GiPreviousButton />
 						</button> */}
 
-						<button className="btn-spotify" onClick={() => { playPrevSong() }} >
+						<button className="btn-spotify" onClick={() => { playPrevSong() }} disabled={!is_active} >
 							<GiPreviousButton />
 						</button>
 
-						<button className="btn-spotify" onClick={() => { player.togglePlay() }} >
+						<button className="btn-spotify" onClick={() => { player.togglePlay() }} disabled={!is_active} >
 							{is_paused ? <FaPlay /> : <FaPause />}
 						</button>
 
-						{/* <button className="btn-spotify" onClick={() => { player.nextTrack() }} >
-							<GiNextButton />
-						</button> */}
-						<button className="btn-spotify" onClick={() => { playNextSong() }} >
+						<button className="btn-spotify" onClick={() => { player.nextTrack() }} disabled={!is_active} >
 							<GiNextButton />
 						</button>
 					</div>

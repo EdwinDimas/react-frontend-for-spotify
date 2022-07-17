@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { useEffect } from "react";
 import { useSelector } from "react-redux";
 import { useGetLikedSongsQuery, usePlayResumeMutation } from "../../services/UsersAndSongs";
 import BaseTable from "../BaseTable/BaseTable";
@@ -17,13 +17,26 @@ interface LikedSongsInt {
 const LikedSongs = ({setVisible}:LikedSongsInt) => {
 
     const limitPerRequest = 30;
-    const device_id = useSelector((state: any) => state.DeviceInfo.device_id)
-    const items = useSelector((state: any) => state.LikedSongs.items)
-    const pageCounter = useSelector((state: any) => state.LikedSongs.pageCounter)
+    const device_id = useSelector((state: any) => state.DeviceInfo.device_id);
+    const items = useSelector((state: any) => state.LikedSongs.items);
+    const uris = useSelector((state: any) => state.LikedSongs.uris);
+    const pageCounter = useSelector((state: any) => state.LikedSongs.pageCounter);
     const { data: likedSongs, isLoading: isLoadingLiked } = useGetLikedSongsQuery({ offset: limitPerRequest * pageCounter, limit: limitPerRequest }, { refetchOnMountOrArgChange: true });
     
     const setPlayListMenuVisible = () => {
         setVisible(elementTypes.PLAYLIST_MENU)
+    }
+
+    const filterSelectedUris = (offset:string) => {
+        const offsetId = uris.indexOf(offset); 
+        return (
+            uris.reduce( (acumulator:string[], current:string, currentIndex:number) => {
+                if(offsetId <= currentIndex){
+                   acumulator.push(current) 
+                }
+                return acumulator;
+            }, [] )
+        )
     }
 
     useEffect(() => {
@@ -35,9 +48,9 @@ const LikedSongs = ({setVisible}:LikedSongsInt) => {
 
     const [playResume] = usePlayResumeMutation({})
 
-    const onDoubleClickHandler = async (e: any, row: any, index: any) => {
-        await store.dispatch(setCurrentSong(row.uri))
-        playResume({ uris: [row.uri], device_id: device_id })
+    const onDoubleClickHandler = (e: any, row: any, index: any) => {
+        store.dispatch(setCurrentSong(row.uri))
+        playResume({ uris: filterSelectedUris(row.uri), device_id: device_id })
     }
 
     const onScroll = (e: any) => {
@@ -64,7 +77,7 @@ const LikedSongs = ({setVisible}:LikedSongsInt) => {
                     { dataField: "track", text: "Track" },
                     { dataField: "artist", text: "Artist" },
                     { dataField: "album", text: "Album" },
-                    { dataField: "uri", text: "uri", hidden: true }
+                    { dataField: "uri", text: "uri" }
                 ]}
                 data={items.map((item: LikedSongsItem, key: number) => {
                     return {

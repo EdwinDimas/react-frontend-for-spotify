@@ -59,6 +59,21 @@
     margin-bottom: auto;
 }
 
+.btn-spotify:disabled {
+    display: block;
+    /* background-color: white; */
+    color: rgb(85, 85, 85);
+    font-size: 5vh;
+    height: 8vh;
+    margin-top: 1vh;
+    margin-bottom: auto;
+    border: 1px solid #000000;
+}
+
+.btn-spotify:focus {
+    outline: none;
+  }
+
 .btn-container {
     display: flex;
 }

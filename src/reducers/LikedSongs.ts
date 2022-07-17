@@ -40,21 +40,12 @@ const LikedSongsSlice = createSlice({
             const currentIndex = uris.indexOf(action.payload);
             state.currentSong = action.payload
             state.previousSong = uris[currentIndex - 1] ?? "";
-            state.nextSong = uris[currentIndex + 1] ?? "";
         },
         setPreviousSong(state){
             const uris = current(state.uris)
             const currentIndex = uris.indexOf(state.currentSong);
             state.previousSong = uris[currentIndex -2] ?? ""
             state.currentSong = uris[currentIndex -1] ?? ""
-            state.nextSong = uris[currentIndex] ?? ""
-        },
-        setNextSong(state){
-            const uris = current(state.uris)
-            const currentIndex = uris.indexOf(state.currentSong);
-            state.previousSong = uris[currentIndex] ?? "";
-            state.currentSong = uris[currentIndex + 1 ] ?? "";
-            state.nextSong = uris[currentIndex + 2 ] ?? "";
         }
     }
 })
@@ -64,6 +55,6 @@ export const {
     incrementPageCounter, 
     setCurrentSong, 
     setPreviousSong, 
-    setNextSong } = LikedSongsSlice.actions;
+} = LikedSongsSlice.actions;
 
 export default LikedSongsSlice;
