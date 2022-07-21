@@ -1,5 +1,10 @@
-import { createSlice, current, PayloadAction } from "@reduxjs/toolkit";
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { LikedSongsItem } from "../components/playlists/Types";
+
+interface currentSongInt {
+    uri: string
+    name: string
+}
 
 interface LikedSongsInt {
     items: LikedSongsItem[]
@@ -7,8 +12,9 @@ interface LikedSongsInt {
     offset_uri: string
     pageCounter: number,
     previousSong: string,
-    currentSong: string,
-    nextSong: string
+    currentSong: currentSongInt,
+    nextSong: string,
+    paused: boolean
 }
 
 const initialState = {
@@ -17,8 +23,9 @@ const initialState = {
     offset_uri: "",
     pageCounter: 0,
     previousSong: "",
-    currentSong: "",
+    currentSong: {name: "", uri:""},
     nextSong: "",
+    paused: true,
 } as LikedSongsInt
 
 const LikedSongsSlice = createSlice({
@@ -35,26 +42,20 @@ const LikedSongsSlice = createSlice({
         incrementPageCounter(state) {
             state.pageCounter++
         },
-        setCurrentSong(state, action: PayloadAction<string>) {
-            const uris = current(state.uris)
-            const currentIndex = uris.indexOf(action.payload);
-            state.currentSong = action.payload
-            state.previousSong = uris[currentIndex - 1] ?? "";
+        setCurrentSong(state, action:PayloadAction<currentSongInt>) {
+            state.currentSong = action.payload;
         },
-        setPreviousSong(state){
-            const uris = current(state.uris)
-            const currentIndex = uris.indexOf(state.currentSong);
-            state.previousSong = uris[currentIndex -2] ?? ""
-            state.currentSong = uris[currentIndex -1] ?? ""
-        }
+        setIsPaused(state, action:PayloadAction<boolean>){
+            state.paused = action.payload;
+        },        
     }
 })
 
 export const { 
     updateItems, 
-    incrementPageCounter, 
-    setCurrentSong, 
-    setPreviousSong, 
+    incrementPageCounter,
+    setCurrentSong,
+    setIsPaused
 } = LikedSongsSlice.actions;
 
 export default LikedSongsSlice;

@@ -6,6 +6,8 @@
 .dashboard-body {
     height: 75vh;
     overflow-y: auto;
+    background-color: #333343;
+    color: white;
 }
 
 .dashboard-player {

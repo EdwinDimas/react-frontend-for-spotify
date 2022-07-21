@@ -20,7 +20,8 @@
 .now-playing__name {
     color: white;
     margin: 20px 0 3px 10px;
-    width: 90%;
+    width: 22vw;
+    min-width: 230px;
     white-space: nowrap;
     overflow: hidden;
 }
@@ -28,8 +29,15 @@
 .now-playing__name span {
     display: inline-block;
     position: relative;
-    animation: leftright 3s infinite alternate ease-in-out;
   }
+
+.animate-fast {
+    animation: leftright 3s infinite alternate ease-in-out;
+}
+
+.animate-slow {
+    animation: leftright 10s infinite alternate ease-in-out;
+}
 
   @keyframes leftright {
     0%,
@@ -37,7 +45,7 @@
       transform: translateX(0%);
       left: 0%;
     }
-    90%,
+    80%,
     100% {
       transform: translateX(-100%);
       left: 100%;
@@ -84,7 +92,8 @@
 
 .left-side-player {
     display:flex;
-    width: 30vw;
+    width: 33vw;
+    min-width: 350px;
 }
 
 .spacer {

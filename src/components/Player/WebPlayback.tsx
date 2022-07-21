@@ -1,47 +1,38 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { store } from "../../redux/store";
 import DeviceInfo from "../../reducers/DeviceInfo";
 import { FaPlay, FaPause } from "react-icons/fa";
 import { GiPreviousButton, GiNextButton } from "react-icons/gi";
 import './WebPlayback.css'
-import { usePlayResumeMutation } from "../../services/UsersAndSongs";
-import { useSelector } from "react-redux";
-import { setPreviousSong } from "../../reducers/LikedSongs";
+import { setCurrentSong, setIsPaused } from "../../reducers/LikedSongs";
 
 const WebPlayBack = (props: any) => {
 
 	const track = {
 		name: "",
 		album: { images: [{ url: "" }] },
-		artists: [{ name: "" }]
+		artists: [{ name: "" }],
+		uri: ""
 	}
 
 	const [player, setPlayer] = useState<any>(undefined);
-	const [is_paused, setPaused] = useState(false);
+	const [is_paused, setPaused] = useState(true);
 	const [is_active, setActive] = useState(false);
 	const [current_track, setTrack] = useState(track);
-	const uris = useSelector((state: any) => state.LikedSongs.uris);
-	const previousSong = useSelector((state: any) => state.LikedSongs.previousSong);
-	const deviceId = useSelector( (state: any) => state.DeviceInfo.deviceId);
+	const container = useRef<any>(null);
+	const text = useRef<any>(null);
 
-	const filterSelectedUris = (offset:string) => {
-        const offsetId = uris.indexOf(offset); 
-        return (
-            uris.reduce( (acumulator:string[], current:string, currentIndex:number) => {
-                if(offsetId <= currentIndex){
-                   acumulator.push(current) 
-                }
-                return acumulator;
-            }, [] )
-        )
-    }
+	useEffect(() => {
+		store.dispatch(setCurrentSong({
+			uri:current_track?.uri ?? "", 
+			name:current_track?.name ?? ""
+		}))
+		console.log({current_track})
+	}, [current_track])
 
-	const [playResume] = usePlayResumeMutation({})
-
-	const playPrevSong = () => {
-		store.dispatch(setPreviousSong());
-		playResume({ uris: filterSelectedUris(previousSong), deviceId:deviceId });
-	}
+	useEffect(() => {
+		store.dispatch(setIsPaused(is_paused))
+	}, [is_paused])
 
 	useEffect(() => {
 
@@ -76,7 +67,7 @@ const WebPlayBack = (props: any) => {
 					return;
 				}
 
-				if(state.track_window.next_tracks.length === 0){
+				if (state.track_window.next_tracks.length === 0) {
 					console.log("ARREGLO TERMINADO");
 				}
 
@@ -94,11 +85,22 @@ const WebPlayBack = (props: any) => {
 
 		};
 
-		return (
-			player?.disconnect()
-		)
+		return () => {
+			player?.disconnect();
+		}
 
 	}, []);
+
+	if (container.current?.clientWidth < text.current?.clientWidth) {
+		const diff = Math.abs(container.current?.clientWidth - text.current?.clientWidth);
+		if(diff < 60){
+			text.current?.classList.add("animate-fast");
+		} else {
+			text.current?.classList.add("animate-slow");
+		}	
+	} else {
+		text.current?.classList.remove("animate-fast", "animate-slow");
+	}
 
 	return (
 		!player ? <div>Cargando Reproductor...</div> :
@@ -109,8 +111,8 @@ const WebPlayBack = (props: any) => {
 							className="now-playing__cover" alt="" />
 
 						<div className="now-playing__side">
-							<div className="now-playing__name ">
-								<span>
+							<div className="now-playing__name " ref={container}>
+								<span ref={text}>
 									{current_track?.name}
 								</span>
 							</div>
@@ -124,11 +126,7 @@ const WebPlayBack = (props: any) => {
 					<div className="spacer" />
 
 					<div className="btn-container">
-						{/* <button className="btn-spotify" onClick={() => { player.previousTrack() }} >
-							<GiPreviousButton />
-						</button> */}
-
-						<button className="btn-spotify" onClick={() => { playPrevSong() }} disabled={!is_active} >
+						<button className="btn-spotify" onClick={() => { player.previousTrack() }} disabled={!is_active} >
 							<GiPreviousButton />
 						</button>
 

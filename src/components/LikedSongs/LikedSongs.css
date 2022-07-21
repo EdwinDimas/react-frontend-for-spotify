@@ -14,3 +14,36 @@
 .separator {
     flex: 1;
 }
+
+.track-name-col {
+    max-width: 20vw;
+    min-width: 250px;
+}
+
+.artist-name-col {
+    max-width: 20vw;
+    min-width: 250px;
+}
+
+.album-name-col {
+    max-width: 20vw;
+    min-width: 250px;
+}
+
+.release-date-col {
+    max-width: 10vw;
+    min-width: 100px;
+}
+
+.duration-col {
+    max-width: 10vw;
+    min-width: 100px;
+}
+
+.btn-playresume {
+    display: inline;
+    background-color: transparent;
+    color: white;
+    font-size: 20px;
+    border: 1px solid transparent;
+}
