@@ -5,6 +5,7 @@
 
 .spotify-main-wrapper {
     display: flex;
+    height: 100%;
 }
 
 .now-playing__cover {
@@ -29,7 +30,7 @@
 .now-playing__name span {
     display: inline-block;
     position: relative;
-  }
+}
 
 .animate-fast {
     animation: leftright 3s infinite alternate ease-in-out;
@@ -39,18 +40,20 @@
     animation: leftright 10s infinite alternate ease-in-out;
 }
 
-  @keyframes leftright {
+@keyframes leftright {
+
     0%,
     20% {
-      transform: translateX(0%);
-      left: 0%;
+        transform: translateX(0%);
+        left: 0%;
     }
+
     80%,
     100% {
-      transform: translateX(-100%);
-      left: 100%;
+        transform: translateX(-100%);
+        left: 100%;
     }
-  }
+}
 
 .now-playing__artist {
     color: rgb(167, 167, 167);
@@ -65,6 +68,7 @@
     height: 8vh;
     margin-top: 1vh;
     margin-bottom: auto;
+    border: 1px solid #000000;
 }
 
 .btn-spotify:disabled {
@@ -80,23 +84,98 @@
 
 .btn-spotify:focus {
     outline: none;
-  }
+}
 
 .btn-container {
     display: flex;
 }
 
-.right-side-player {
-    width: 30vw;
+.btn-center {
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.btn-main-container {
+    display: flex;
+    flex-direction: column;
+    width: 35vw;
+}
+
+.song-slider {
+    display: flex;
+    margin-top: auto;
+    margin-bottom: auto;
+    color: white;
 }
 
 .left-side-player {
-    display:flex;
+    display: flex;
     width: 33vw;
     min-width: 350px;
 }
 
 .spacer {
     flex-grow: 1;
+    min-width: 50px;
+}
+
+.right-side-player {
+    width: 30vw;
+    display: flex;
+}
+
+.change-volume {
+    width: 10vw;
+    min-width: 150px;
+    margin-right: 3vw;
+    margin-top: auto;
+    margin-bottom: auto;
+    color: white;
+    font-size: 20px;
+    display: flex;
+}
+
+.change-device {
+    width: 50px;
+    margin: auto 0 auto auto;
+    color: white;
+    font-size: 20px;
+}
+
+
+.horizontal-slider {
+    width: 90%;
+    margin-top: auto;
+    margin-bottom: auto;
   }
 
+  .example-thumb {
+    cursor: pointer;
+    position: absolute;
+    z-index: 100;
+    background: #0fbd38;
+    border: 5px solid #0fbd38;
+    border-radius: 100%;
+  }
+  
+  .example-thumb.active {
+    background-color: #0fbd38;
+  }
+  .example-track {
+    position: relative;
+    background: rgb(158, 158, 158);
+  }
+  .example-track.example-track-0 {
+    background: #0fbd38;
+  }
+  .horizontal-slider .example-track {
+    top: -2px;
+    height: 8px;
+  }
+  .horizontal-slider .example-thumb {
+    top:-5px;
+    width: 14px;
+    outline: none;
+    height: 14px;
+    line-height: 38px;
+  }

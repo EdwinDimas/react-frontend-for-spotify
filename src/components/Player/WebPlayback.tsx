@@ -5,6 +5,12 @@ import { FaPlay, FaPause } from "react-icons/fa";
 import { GiPreviousButton, GiNextButton } from "react-icons/gi";
 import './WebPlayback.css'
 import { setCurrentSong, setIsPaused } from "../../reducers/LikedSongs";
+import ReactSlider from "react-slider";
+import { BsFillVolumeDownFill } from "react-icons/bs";
+import { MdOutlineDevicesOther } from "react-icons/md";
+import Dropdown from 'react-bootstrap/Dropdown';
+import DropdownButton from 'react-bootstrap/DropdownButton';
+
 
 const WebPlayBack = (props: any) => {
 
@@ -24,10 +30,10 @@ const WebPlayBack = (props: any) => {
 
 	useEffect(() => {
 		store.dispatch(setCurrentSong({
-			uri:current_track?.uri ?? "", 
-			name:current_track?.name ?? ""
+			uri: current_track?.uri ?? "",
+			name: current_track?.name ?? ""
 		}))
-		console.log({current_track})
+		console.log({ current_track })
 	}, [current_track])
 
 	useEffect(() => {
@@ -93,11 +99,11 @@ const WebPlayBack = (props: any) => {
 
 	if (container.current?.clientWidth < text.current?.clientWidth) {
 		const diff = Math.abs(container.current?.clientWidth - text.current?.clientWidth);
-		if(diff < 60){
+		if (diff < 60) {
 			text.current?.classList.add("animate-fast");
 		} else {
 			text.current?.classList.add("animate-slow");
-		}	
+		}
 	} else {
 		text.current?.classList.remove("animate-fast", "animate-slow");
 	}
@@ -125,26 +131,69 @@ const WebPlayBack = (props: any) => {
 
 					<div className="spacer" />
 
-					<div className="btn-container">
-						<button className="btn-spotify" onClick={() => { player.previousTrack() }} disabled={!is_active} >
-							<GiPreviousButton />
-						</button>
+					<div className="btn-main-container">
+						<div className="btn-center">
+							<div className="btn-container">
+								<button className="btn-spotify" onClick={() => { player.previousTrack() }} disabled={!is_active} >
+									<GiPreviousButton />
+								</button>
 
-						<button className="btn-spotify" onClick={() => { player.togglePlay() }} disabled={!is_active} >
-							{is_paused ? <FaPlay /> : <FaPause />}
-						</button>
+								<button className="btn-spotify" onClick={() => { player.togglePlay() }} disabled={!is_active} >
+									{is_paused ? <FaPlay /> : <FaPause />}
+								</button>
 
-						<button className="btn-spotify" onClick={() => { player.nextTrack() }} disabled={!is_active} >
-							<GiNextButton />
-						</button>
+								<button className="btn-spotify" onClick={() => { player.nextTrack() }} disabled={!is_active} >
+									<GiNextButton />
+								</button>
+							</div>
+						</div>
+						<div className={"song-slider"}>
+							<span className="time-counter">0:00</span>
+							&nbsp;
+							<ReactSlider
+								className="horizontal-slider"
+								thumbClassName="example-thumb"
+								trackClassName="example-track"
+								renderTrack={(props, state) => <div {...props} />}//custom track
+							/>
+							&nbsp;
+							<span className="time-counter">0:00</span>
+						</div>
 					</div>
 
 					<div className="spacer" />
 
 					<div className="right-side-player">
+						<div className="change-device">
+							<DropdownButton
+								drop={"up"}
+								variant="dark"
+								title={<MdOutlineDevicesOther fontSize={"30px"} />}
+							>
+								<Dropdown.Header>Change Device <br/> A ver si salta</Dropdown.Header>
+								<Dropdown.Divider />
+								<Dropdown.Item eventKey="2">Another action</Dropdown.Item>
+								<Dropdown.Item eventKey="3">Something else here</Dropdown.Item>
+								<Dropdown.Item eventKey="4">Separated link</Dropdown.Item>
+							</DropdownButton>
+
+					</div>
+					<div className="change-volume">
+
+						<BsFillVolumeDownFill fontSize={"30px"} />
+						{/* <BsFillVolumeMuteFill fontSize={"30px"} />
+							<BsFillVolumeUpFill fontSize={"30px"} /> */}
+						<ReactSlider
+							className="horizontal-slider"
+							thumbClassName="example-thumb"
+							trackClassName="example-track"
+							renderTrack={(props, state) => <div {...props} />}//custom track
+						/>
+
 					</div>
 				</div>
 			</div>
+			</div >
 	)
 }
 
